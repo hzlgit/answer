@@ -10,5 +10,5 @@
 *.class
 .checkstyle
 /.idea
-*.DS_Store
 *.lock
+.DS_Store
