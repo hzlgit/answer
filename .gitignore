@@ -4,7 +4,7 @@
 /.settings
 /.classpath
 /.project
-/.gradle
+.gradle
 *.log
 *.iml
 *.class
@@ -12,3 +12,4 @@
 /.idea
 *.lock
 .DS_Store
+.idea
