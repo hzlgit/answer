@@ -18,8 +18,7 @@ public class UserController {
 
     @GetMapping("/info")
     public String getUserInfo() {
-        Optional<User> user = userService.getUserWithAuthorities();
-        return user.toString();
+        return "user info";
     }
 
     @RequestMapping("/index")

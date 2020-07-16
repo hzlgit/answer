@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue
@@ -35,17 +36,18 @@ public class User {
     @Column(nullable = false)
     private Date createTime;
 
-    @ManyToMany
-    @JoinTable(
-            name = "USER_AUTHORITY",
-            joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_NAME", referencedColumnName = "NAME")})
-    @BatchSize(size = 20)
-    private Set<Authority> authorities = new HashSet<>();
     @JsonIgnore
     @Column(name = "ACTIVATED")
     @NotNull
     private boolean activated;
+
+    public boolean isActivated() {
+        return activated;
+    }
+
+    public void setActivated(boolean activated) {
+        this.activated = activated;
+    }
 
     public Set<Authority> getAuthorities() {
         return authorities;
@@ -55,13 +57,14 @@ public class User {
         this.authorities = authorities;
     }
 
-    public boolean isActivated() {
-        return activated;
-    }
+    @ManyToMany
+    @JoinTable(
+            name = "USER_AUTHORITY",
+            joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
+            inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_NAME", referencedColumnName = "NAME")})
+    @BatchSize(size = 20)
+    private Set<Authority> authorities = new HashSet<>();
 
-    public void setActivated(boolean activated) {
-        this.activated = activated;
-    }
 
     public long getId() {
         return id;

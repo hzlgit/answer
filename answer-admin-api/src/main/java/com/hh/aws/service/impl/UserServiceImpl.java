@@ -8,16 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @Service("userService")
-@Transactional
 public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
 
     @Transactional(readOnly = true)
     public Optional<User> getUserWithAuthorities() {
@@ -30,7 +32,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserById(long id) {
-        return userRepository.findById(id);
+        return null;
     }
 
     @Override
@@ -48,5 +50,15 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setId(id);
         userRepository.save(user);
+    }
+
+    @Override
+    public Set<String> findPermissions(String username) {
+        Set<String> permissions = new HashSet<>();
+        permissions.add("sys:user:view");
+        permissions.add("sys:user:add");
+        permissions.add("sys:user:edit");
+        permissions.add("sys:user:delete");
+        return permissions;
     }
 }
