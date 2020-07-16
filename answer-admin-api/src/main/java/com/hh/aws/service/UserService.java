@@ -3,25 +3,17 @@ package com.hh.aws.service;
 import com.hh.aws.model.User;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 public interface UserService {
+    public Optional<User> getUserWithAuthorities();
+    public List<User> getUserList();
 
-     User findUserByName(String userName);
+    public User findUserById(long id);
 
-     List<User> getUserList();
+    public void save(User user);
 
-     User findUserById(long id);
+    public void edit(User user);
 
-     void save(User user);
-
-     void edit(User user);
-
-     void delete(long id);
-    /**
-     * 查找用户的菜单权限标识集合
-     * @param userName
-     * @return
-     */
-    Set<String> findPermissions(String userName);
+    public void delete(long id);
 }

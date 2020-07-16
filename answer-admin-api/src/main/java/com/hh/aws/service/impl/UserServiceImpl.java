@@ -3,23 +3,25 @@ package com.hh.aws.service.impl;
 import com.hh.aws.model.User;
 import com.hh.aws.repository.UserRepository;
 import com.hh.aws.service.UserService;
+import com.hh.aws.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 
 @Service("userService")
+@Transactional
 public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
 
-    @Override
-    public User findUserByName(String userName) {
-        return userRepository.findUserByName(userName);
+    @Transactional(readOnly = true)
+    public Optional<User> getUserWithAuthorities() {
+        return SecurityUtils.getCurrentUsername().flatMap(userRepository::findOneWithAuthoritiesByUserName);
     }
     @Override
     public List<User> getUserList() {
@@ -46,15 +48,5 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setId(id);
         userRepository.save(user);
-    }
-
-    @Override
-    public Set<String> findPermissions(String username) {
-        Set<String> permissions = new HashSet<>();
-        permissions.add("sys:user:view");
-        permissions.add("sys:user:add");
-        permissions.add("sys:user:edit");
-        permissions.add("sys:user:delete");
-        return permissions;
     }
 }

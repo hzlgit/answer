@@ -6,10 +6,10 @@ import org.springframework.context.annotation.ComponentScan;
 
 
 @SpringBootApplication
-//@ComponentScan(basePackages = {"com.hh.aws.repository.*"})
-public class AwsApplication {
+@ComponentScan(basePackages = {"com.hh.aws.repository.*"})
+public class AwsAdminApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AwsApplication.class, args);
+        SpringApplication.run(AwsAdminApplication.class, args);
     }
 }

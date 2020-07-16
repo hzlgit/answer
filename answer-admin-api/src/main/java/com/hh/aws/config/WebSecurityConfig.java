@@ -4,7 +4,6 @@ import com.hh.aws.security.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,22 +18,33 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private  TokenProvider tokenProvider;
-    @Autowired
-    private  CorsFilter corsFilter;
-    @Autowired
-    private  JwtAuthenticationEntryPoint authenticationErrorHandler;
-    @Autowired
-    private  JwtAccessDeniedHandler jwtAccessDeniedHandler;
+
+    private final TokenProvider tokenProvider;
+    private final CorsFilter corsFilter;
+    private final JwtAuthenticationEntryPoint authenticationErrorHandler;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+
     @Autowired
     private AjaxAuthenticationSuccessHandler ajaxAuthenticationSuccessHandler;
     @Autowired
     private AjaxAuthenticationFailureHandler ajaxAuthenticationFailureHandler;
     @Autowired
     private UserModelDetailsService userModelDetailsService;
+
+    public WebSecurityConfig(
+            TokenProvider tokenProvider,
+            CorsFilter corsFilter,
+            JwtAuthenticationEntryPoint authenticationErrorHandler,
+            JwtAccessDeniedHandler jwtAccessDeniedHandler
+    ) {
+        this.tokenProvider = tokenProvider;
+        this.corsFilter = corsFilter;
+        this.authenticationErrorHandler = authenticationErrorHandler;
+        this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
+    }
+
+
 
     // Configure BCrypt password encoder =====================================================================
 
@@ -87,8 +97,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        httpSecurity.exceptionHandling().accessDeniedHandler(jwtAccessDeniedHandler);
 //        httpSecurity.addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class);
         httpSecurity.authorizeRequests()
-                // 跨域预检请求
-                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .anyRequest()
                 .permitAll()
                 .and()
