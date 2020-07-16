@@ -2,6 +2,7 @@ package com.hh.aws.security;
 
 import com.hh.aws.model.User;
 import com.hh.aws.repository.UserRepository;
+import com.hh.aws.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -22,40 +24,18 @@ import java.util.stream.Collectors;
  */
 @Component("userDetailsService")
 public class UserModelDetailsService implements UserDetailsService {
-
-   private final Logger log = LoggerFactory.getLogger(UserModelDetailsService.class);
-
-
-   @Autowired(required=true)
-   private  UserRepository userRepository;
+   @Autowired
+   private UserService userService;
 
    @Override
-   @Transactional
-   public UserDetails loadUserByUsername(final String login) {
-      log.debug("Authenticating user '{}'", login);
-
-//      if (new EmailValidator().isValid(login, null)) {
-//         return userRepository.findOneWithAuthoritiesByUsername(login)
-//            .map(user -> createSpringSecurityUser(login, user))
-//            .orElseThrow(() -> new UsernameNotFoundException("User with email " + login + " was not found in the database"));
-//      }
-
-      String lowercaseLogin = login.toLowerCase(Locale.ENGLISH);
-      return userRepository.findOneWithAuthoritiesByUserName(lowercaseLogin)
-         .map(user -> createSpringSecurityUser(lowercaseLogin, user))
-         .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database"));
-
-   }
-
-   private org.springframework.security.core.userdetails.User createSpringSecurityUser(String lowercaseLogin, User user) {
-      if (!user.isActivated()) {
-         throw new UserNotActivatedException("User " + lowercaseLogin + " was not activated");
+   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+      User user = userService.findUserByName(username);
+      if (user == null) {
+         throw new UsernameNotFoundException("该用户不存在");
       }
-      List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
-         .map(authority -> new SimpleGrantedAuthority(authority.getName()))
-         .collect(Collectors.toList());
-      return new org.springframework.security.core.userdetails.User(user.getUserName(),
-         user.getPassword(),
-         grantedAuthorities);
+      // 用户权限列表，根据用户拥有的权限标识与如 @PreAuthorize("hasAuthority('sys:menu:view')") 标注的接口对比，决定是否可以调用接口
+      Set<String> permissions = userService.findPermissions(username);
+      List<GrantedAuthority> grantedAuthorities = permissions.stream().map(GrantedAuthorityImpl::new).collect(Collectors.toList());
+      return new JwtUserDetails(username, user.getPassword(), grantedAuthorities);
    }
 }

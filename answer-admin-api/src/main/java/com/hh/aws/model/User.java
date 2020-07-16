@@ -1,16 +1,11 @@
 package com.hh.aws.model;
 
-import net.minidev.json.annotate.JsonIgnore;
-import org.hibernate.annotations.BatchSize;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue
@@ -35,33 +30,6 @@ public class User {
     @Column(nullable = false)
     private Date createTime;
 
-    @ManyToMany
-    @JoinTable(
-            name = "USER_AUTHORITY",
-            joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_NAME", referencedColumnName = "NAME")})
-    @BatchSize(size = 20)
-    private Set<Authority> authorities = new HashSet<>();
-    @JsonIgnore
-    @Column(name = "ACTIVATED")
-    @NotNull
-    private boolean activated;
-
-    public Set<Authority> getAuthorities() {
-        return authorities;
-    }
-
-    public void setAuthorities(Set<Authority> authorities) {
-        this.authorities = authorities;
-    }
-
-    public boolean isActivated() {
-        return activated;
-    }
-
-    public void setActivated(boolean activated) {
-        this.activated = activated;
-    }
 
     public long getId() {
         return id;
