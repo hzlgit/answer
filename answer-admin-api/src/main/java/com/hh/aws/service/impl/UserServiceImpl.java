@@ -61,4 +61,6 @@ public class UserServiceImpl implements UserService {
         permissions.add("sys:user:delete");
         return permissions;
     }
+
+
 }

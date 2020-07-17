@@ -5,11 +5,11 @@ import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
-@Table(name = "AUTHORITY")
+@Table(name="authority")
 public class Authority {
 
    @Id
-   @Column(name = "NAME", length = 50)
+   @Column(name = "name", length = 50)
    @NotNull
    private String name;
 

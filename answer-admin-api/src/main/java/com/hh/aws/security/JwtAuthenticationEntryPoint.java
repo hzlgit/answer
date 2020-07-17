@@ -23,6 +23,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
       ResponseData responseData = new ResponseData();
       responseData.setCode("0000");
       responseData.setMsg("请先登录!");
+      response.setContentType("application/json; charset=utf-8");
       response.getWriter().write(JSON.toJSONString(responseData));
 //      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
    }
