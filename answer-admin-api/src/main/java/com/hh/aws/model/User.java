@@ -24,8 +24,6 @@ public class User {
     @Column(nullable = false,unique = true)
     private String userName;
     @Column(nullable = false)
-    private String password;
-    @Column(nullable = false)
     private String nickName;
     @Column(nullable = false)
     private String trueName;
@@ -98,13 +96,6 @@ public class User {
         this.userName = userName;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public String getNickName() {
         return nickName;
@@ -162,7 +153,6 @@ public class User {
     public String toString() {
         return "User{" +
                 "userName='" + userName + '\'' +
-                ", password='" + password + '\'' +
                 ", nickName='" + nickName + '\'' +
                 ", sex='" + sex + '\'' +
                 ", trueName='" + trueName + '\'' +
