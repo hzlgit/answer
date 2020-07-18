@@ -21,7 +21,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
       // We should just send a 401 Unauthorized response because there is no 'login page' to redirect to
       // Here you can place any message you want
       ResponseData responseData = new ResponseData();
-      responseData.setCode("0000");
+      responseData.setCode("300");
       responseData.setMsg("请先登录!");
       response.setContentType("application/json; charset=utf-8");
       response.getWriter().write(JSON.toJSONString(responseData));

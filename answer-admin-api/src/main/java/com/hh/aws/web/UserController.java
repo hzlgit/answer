@@ -1,6 +1,8 @@
 package com.hh.aws.web;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.hh.aws.model.ResponseData;
 import com.hh.aws.model.User;
 import com.hh.aws.security.JWTFilter;
 import com.hh.aws.security.TokenProvider;
@@ -20,9 +22,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/admin/user")
 public class UserController {
     @Resource
     UserService userService;
@@ -32,13 +35,17 @@ public class UserController {
     @Autowired
     private AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    @GetMapping("/user/info")
+    @GetMapping("/info")
     public String getUserInfo() {
-        return "user info";
+        Optional<User> user  = userService.getUserWithAuthorities();
+        ResponseData responseData = new ResponseData();
+        responseData.setData(user.get());
+        return JSON.toJSONString(responseData);
+
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JWTToken> authorize(@Valid @RequestBody LoginDto loginDto) {
+    public String login(@Valid @RequestBody LoginDto loginDto) {
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
@@ -51,15 +58,16 @@ public class UserController {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-
-        return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
+        ResponseData responseData = new ResponseData();
+        responseData.setCode("0000");
+        responseData.setData(jwt);
+        return JSON.toJSONString(responseData);
     }
 
     @RequestMapping("/list")
-    public  String list(Model model) {
+    public  String list() {
         List<User> users=userService.getUserList();
-        model.addAttribute("users", users);
-        return "user/list";
+        return JSON.toJSONString(users);
     }
 
     /**
@@ -67,19 +75,19 @@ public class UserController {
      */
     static class JWTToken {
 
-        private String idToken;
+        private String token;
 
-        JWTToken(String idToken) {
-            this.idToken = idToken;
+        JWTToken(String token) {
+            this.token = token;
         }
 
-        @JsonProperty("id_token")
-        String getIdToken() {
-            return idToken;
+        @JsonProperty("token")
+        String getToken() {
+            return token;
         }
 
-        void setIdToken(String idToken) {
-            this.idToken = idToken;
+        void setToken(String token) {
+            this.token = token;
         }
     }
 }

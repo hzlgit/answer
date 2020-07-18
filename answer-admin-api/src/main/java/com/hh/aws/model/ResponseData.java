@@ -1,7 +1,7 @@
 package com.hh.aws.model;
 
 public class ResponseData {
-    private String code;
+    private String code = "0000";
     private String msg;
     private Object data;
     public ResponseData() {
