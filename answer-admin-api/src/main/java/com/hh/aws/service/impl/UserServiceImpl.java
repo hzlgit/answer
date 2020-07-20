@@ -5,6 +5,10 @@ import com.hh.aws.repository.UserRepository;
 import com.hh.aws.service.UserService;
 import com.hh.aws.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,8 +30,9 @@ public class UserServiceImpl implements UserService {
         return SecurityUtils.getCurrentUsername().flatMap(userRepository::findOneWithAuthoritiesByUserName);
     }
     @Override
-    public List<User> getUserList() {
-        return userRepository.findAll();
+    public Page<User> getUserList(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.Direction.ASC, "id");
+        return userRepository.findAll(pageable);
     }
 
     @Override
@@ -37,7 +42,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void save(User user) {
-        userRepository.save(user);
+        User saveUser = userRepository.findById(user.getId()).get();
+        if(!user.getUserName().isEmpty()) {
+            saveUser.setUserName(user.getUserName());
+        }
+        if(!user.getAvatar().isEmpty()) {
+            saveUser.setAvatar(user.getAvatar());
+        }
+        if(!user.getNickName().isEmpty()) {
+            saveUser.setNickName(user.getNickName());
+        }
+        if(!user.getTrueName().isEmpty()) {
+            saveUser.setTrueName(user.getTrueName());
+        }
+        if(!user.getSex().isEmpty()) {
+            saveUser.setSex(user.getSex());
+        }
+        if(user.getClassId() > 0) {
+            saveUser.setClassId(user.getClassId());
+        }
+        userRepository.save(saveUser);
     }
 
     @Override

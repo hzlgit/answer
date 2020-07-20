@@ -1,6 +1,7 @@
 package com.hh.aws.service;
 
 import com.hh.aws.model.User;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +11,7 @@ public interface UserService {
 
     Optional<User> getUserWithAuthorities();
 
-     List<User> getUserList();
+    Page<User> getUserList(Integer page, Integer size);
 
      User findUserById(long id);
 

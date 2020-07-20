@@ -33,6 +33,16 @@ public class User {
     private String avatar;
     @Column(nullable = false)
     private Date createTime;
+    @Column
+    private String password;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     @JsonIgnore
     @Column(name = "ACTIVATED")
@@ -157,6 +167,7 @@ public class User {
                 ", sex='" + sex + '\'' +
                 ", trueName='" + trueName + '\'' +
                 ", avatar=" + avatar +
+                ", id=" + id +
                 '}';
     }
 

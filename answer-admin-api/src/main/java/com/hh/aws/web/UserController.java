@@ -1,14 +1,16 @@
 package com.hh.aws.web;
 
 import com.alibaba.fastjson.JSON;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.hh.aws.model.PageData;
 import com.hh.aws.model.ResponseData;
 import com.hh.aws.model.User;
 import com.hh.aws.security.JWTFilter;
 import com.hh.aws.security.TokenProvider;
 import com.hh.aws.service.UserService;
 import com.hh.aws.web.dto.LoginDto;
+import com.hh.aws.web.dto.PageDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +18,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -39,7 +40,7 @@ public class UserController {
     public String getUserInfo() {
         Optional<User> user  = userService.getUserWithAuthorities();
         ResponseData responseData = new ResponseData();
-        responseData.setData(user.get());
+        responseData.setData(user.get().toString());
         return JSON.toJSONString(responseData);
 
     }
@@ -64,30 +65,21 @@ public class UserController {
         return JSON.toJSONString(responseData);
     }
 
-    @RequestMapping("/list")
-    public  String list() {
-        List<User> users=userService.getUserList();
-        return JSON.toJSONString(users);
-    }
-
     /**
-     * Object to return as body in JWT Authentication.
+     * 列表
+     * @param pageDto
+     * @return
      */
-    static class JWTToken {
-
-        private String token;
-
-        JWTToken(String token) {
-            this.token = token;
-        }
-
-        @JsonProperty("token")
-        String getToken() {
-            return token;
-        }
-
-        void setToken(String token) {
-            this.token = token;
-        }
+    @RequestMapping("/list")
+    public  String list(@RequestBody PageDto pageDto) {
+        Page<User> pageUsers=userService.getUserList(pageDto.getPage(), pageDto.getSize());
+        PageData pageData = new PageData();
+        pageData.setCurrentPage(pageUsers.getNumber());
+        pageData.setList(pageUsers.getContent());
+        pageData.setSize(pageUsers.getSize());
+        pageData.setTotalPage(pageUsers.getTotalPages());
+        ResponseData responseData = new ResponseData();
+        responseData.setData(pageData);
+        return JSON.toJSONString(responseData);
     }
 }
