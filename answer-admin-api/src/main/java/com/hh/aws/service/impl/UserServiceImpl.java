@@ -42,26 +42,31 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void save(User user) {
-        User saveUser = userRepository.findById(user.getId()).get();
-        if(!user.getUserName().isEmpty()) {
-            saveUser.setUserName(user.getUserName());
+        if(user.getId()> 0) {
+            User saveUser = userRepository.findById(user.getId()).get();
+            if(!user.getUserName().isEmpty()) {
+                saveUser.setUserName(user.getUserName());
+            }
+            if(!user.getAvatar().isEmpty()) {
+                saveUser.setAvatar(user.getAvatar());
+            }
+            if(!user.getNickName().isEmpty()) {
+                saveUser.setNickName(user.getNickName());
+            }
+            if(!user.getTrueName().isEmpty()) {
+                saveUser.setTrueName(user.getTrueName());
+            }
+            if(!user.getSex().isEmpty()) {
+                saveUser.setSex(user.getSex());
+            }
+            if(user.getClassId() > 0) {
+                saveUser.setClassId(user.getClassId());
+            }
+            userRepository.save(saveUser);
+        } else {
+            userRepository.save(user);
         }
-        if(!user.getAvatar().isEmpty()) {
-            saveUser.setAvatar(user.getAvatar());
-        }
-        if(!user.getNickName().isEmpty()) {
-            saveUser.setNickName(user.getNickName());
-        }
-        if(!user.getTrueName().isEmpty()) {
-            saveUser.setTrueName(user.getTrueName());
-        }
-        if(!user.getSex().isEmpty()) {
-            saveUser.setSex(user.getSex());
-        }
-        if(user.getClassId() > 0) {
-            saveUser.setClassId(user.getClassId());
-        }
-        userRepository.save(saveUser);
+
     }
 
     @Override

@@ -6,6 +6,17 @@ public class ResponseData {
     private Object data;
     public ResponseData() {
     }
+    public ResponseData(String code, String msg) {
+        this.msg = msg;
+        this.code = code;
+    }
+    public ResponseData(String msg, Object data) {
+        this.msg = msg;
+        this.data = data;
+    }
+    public ResponseData(String msg) {
+        this.msg = msg;
+    }
     public ResponseData(String code, String msg, Object data) {
         this.code = code;
         this.msg = msg;

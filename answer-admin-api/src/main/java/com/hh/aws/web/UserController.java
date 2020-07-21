@@ -1,19 +1,18 @@
 package com.hh.aws.web;
-
-import com.alibaba.fastjson.JSON;
+import com.hh.aws.comm.LoggerManage;
 import com.hh.aws.model.PageData;
 import com.hh.aws.model.ResponseData;
 import com.hh.aws.model.User;
+import com.hh.aws.repository.UserRepository;
 import com.hh.aws.security.JWTFilter;
 import com.hh.aws.security.TokenProvider;
 import com.hh.aws.service.UserService;
+import com.hh.aws.utils.FileUtil;
 import com.hh.aws.web.dto.LoginDto;
 import com.hh.aws.web.dto.PageDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -22,31 +21,34 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.List;
+import java.util.Base64;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/admin/user")
-public class UserController {
+public class UserController extends BaseController{
     @Resource
     UserService userService;
 
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private TokenProvider tokenProvider;
     @Autowired
     private AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @GetMapping("/info")
-    public String getUserInfo() {
+    public ResponseData getUserInfo() {
         Optional<User> user  = userService.getUserWithAuthorities();
         ResponseData responseData = new ResponseData();
         responseData.setData(user.get().toString());
-        return JSON.toJSONString(responseData);
+        return responseData;
 
     }
 
     @PostMapping("/login")
-    public String login(@Valid @RequestBody LoginDto loginDto) {
+    public ResponseData login(@Valid @RequestBody LoginDto loginDto) {
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
@@ -62,7 +64,7 @@ public class UserController {
         ResponseData responseData = new ResponseData();
         responseData.setCode("0000");
         responseData.setData(jwt);
-        return JSON.toJSONString(responseData);
+        return responseData;
     }
 
     /**
@@ -71,7 +73,7 @@ public class UserController {
      * @return
      */
     @RequestMapping("/list")
-    public  String list(@RequestBody PageDto pageDto) {
+    public  ResponseData list(@RequestBody PageDto pageDto) {
         Page<User> pageUsers=userService.getUserList(pageDto.getPage(), pageDto.getSize());
         PageData pageData = new PageData();
         pageData.setCurrentPage(pageUsers.getNumber());
@@ -80,6 +82,42 @@ public class UserController {
         pageData.setTotalPage(pageUsers.getTotalPages());
         ResponseData responseData = new ResponseData();
         responseData.setData(pageData);
-        return JSON.toJSONString(responseData);
+        return responseData;
+    }
+    @RequestMapping("/add")
+    public ResponseData add(@RequestBody User user) {
+        userService.save(user);
+        return new ResponseData("添加成功！");
+    }
+    @RequestMapping("/save")
+    public ResponseData save(@RequestBody User user) {
+        userService.save(user);
+        return new ResponseData("保存成功！");
+    }
+
+    @RequestMapping(value = "/uploadAvatar", method = RequestMethod.POST)
+    @LoggerManage(description="上传头像")
+    public ResponseData uploadAvatar(String dataUrl) {
+        try {
+            String filePath="/Users/jj/Documents/java";
+            String fileName= UUID.randomUUID().toString()+".png";
+            String savePath = "/images/"+fileName;
+            String image = dataUrl;
+            String header ="data:image";
+            String[] imageArr=image.split(",");
+            if(imageArr[0].contains(header)){
+                image=imageArr[1];
+                Base64.Decoder decoder = Base64.getDecoder();
+                byte[] decodedBytes = decoder.decode(image);
+                FileUtil.uploadFile(decodedBytes, filePath, fileName);
+                User user = userService.getUserWithAuthorities().get();
+                userRepository.setAvatar(savePath, user.getId());
+            }
+            logger.info("背景地址：" + savePath);
+            return new ResponseData("上传成功", savePath);
+        } catch (Exception e) {
+            logger.error("upload background picture failed, ", e);
+            return new ResponseData("7001","上传失败");
+        }
     }
 }
