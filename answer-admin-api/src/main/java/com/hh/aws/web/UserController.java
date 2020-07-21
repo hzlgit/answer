@@ -1,12 +1,16 @@
 package com.hh.aws.web;
 import com.hh.aws.comm.LoggerManage;
+import com.hh.aws.model.Authority;
 import com.hh.aws.model.PageData;
 import com.hh.aws.model.ResponseData;
 import com.hh.aws.model.User;
+import com.hh.aws.model.enums.ResultCode;
+import com.hh.aws.repository.AuthorityRepository;
 import com.hh.aws.repository.UserRepository;
 import com.hh.aws.security.JWTFilter;
 import com.hh.aws.security.TokenProvider;
 import com.hh.aws.service.UserService;
+import com.hh.aws.utils.DateUtils;
 import com.hh.aws.utils.FileUtil;
 import com.hh.aws.web.dto.LoginDto;
 import com.hh.aws.web.dto.PageDto;
@@ -21,9 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.Base64;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/admin/user")
@@ -33,6 +35,8 @@ public class UserController extends BaseController{
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private AuthorityRepository authorityRepository;
     @Autowired
     private TokenProvider tokenProvider;
     @Autowired
@@ -62,7 +66,6 @@ public class UserController extends BaseController{
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
         ResponseData responseData = new ResponseData();
-        responseData.setCode("0000");
         responseData.setData(jwt);
         return responseData;
     }
@@ -84,15 +87,22 @@ public class UserController extends BaseController{
         responseData.setData(pageData);
         return responseData;
     }
+    @RequestMapping("/getRoles")
+    public ResponseData roles() {
+        List<Authority> authoritys = authorityRepository.findAll();
+        return new ResponseData(ResultCode.SUCCESS,authoritys);
+    }
     @RequestMapping("/add")
     public ResponseData add(@RequestBody User user) {
         userService.save(user);
-        return new ResponseData("添加成功！");
+        return new ResponseData(ResultCode.SUCCESS);
     }
     @RequestMapping("/save")
     public ResponseData save(@RequestBody User user) {
+        user.setCreateTime(new Date());
+        user.setActivated(true);
         userService.save(user);
-        return new ResponseData("保存成功！");
+        return new ResponseData(ResultCode.SUCCESS);
     }
 
     @RequestMapping(value = "/uploadAvatar", method = RequestMethod.POST)
@@ -114,10 +124,10 @@ public class UserController extends BaseController{
                 userRepository.setAvatar(savePath, user.getId());
             }
             logger.info("背景地址：" + savePath);
-            return new ResponseData("上传成功", savePath);
+            return new ResponseData(ResultCode.SUCCESS, savePath);
         } catch (Exception e) {
             logger.error("upload background picture failed, ", e);
-            return new ResponseData("7001","上传失败");
+            return new ResponseData(ResultCode.FAILED);
         }
     }
 }

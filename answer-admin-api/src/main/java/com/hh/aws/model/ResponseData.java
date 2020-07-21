@@ -1,28 +1,29 @@
 package com.hh.aws.model;
 
+import com.hh.aws.model.enums.ResultCode;
+
 public class ResponseData {
     private String code = "0000";
     private String msg;
     private Object data;
     public ResponseData() {
     }
-    public ResponseData(String code, String msg) {
+    public ResponseData(ResultCode resultCode) {
+        this.msg = resultCode.getMsg();
+        this.code = resultCode.getCode();
+    }
+    public ResponseData(String resultCode) {
+        this.code = resultCode;
+    }
+    public ResponseData(String msg,String code) {
         this.msg = msg;
         this.code = code;
     }
-    public ResponseData(String msg, Object data) {
-        this.msg = msg;
+    public ResponseData(ResultCode resultCode, Object data) {
+        this.msg = resultCode.getMsg();
+        this.code = resultCode.getCode();
         this.data = data;
     }
-    public ResponseData(String msg) {
-        this.msg = msg;
-    }
-    public ResponseData(String code, String msg, Object data) {
-        this.code = code;
-        this.msg = msg;
-        this.data = data;
-    }
-
     public String getCode() {
         return code;
     }
