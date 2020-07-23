@@ -2,6 +2,7 @@ package com.hh.aws.model;
 
 import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -66,6 +67,7 @@ public class User {
     }
 
     @ManyToMany
+    @Cascade(value = {org.hibernate.annotations.CascadeType.ALL}) // 设置级联关系
     @JoinTable(
             name = "user_authority",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
