@@ -1,7 +1,7 @@
 package com.hh.aws.web;
 
 import com.alibaba.fastjson.JSON;
-import com.hh.aws.model.ResponseData;
+import com.hh.aws.bean.ResponseData;
 import com.hh.aws.utils.FileUtil;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

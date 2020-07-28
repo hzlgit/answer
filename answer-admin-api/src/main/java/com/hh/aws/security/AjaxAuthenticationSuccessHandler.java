@@ -2,7 +2,7 @@ package com.hh.aws.security;
 
 
 import com.alibaba.fastjson.JSON;
-import com.hh.aws.model.ResponseData;
+import com.hh.aws.bean.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;

@@ -2,7 +2,7 @@ package com.hh.aws.web;
 
 import com.hh.aws.bean.RequestCheckResult;
 import com.hh.aws.model.Authority;
-import com.hh.aws.model.ResponseData;
+import com.hh.aws.bean.ResponseData;
 import com.hh.aws.repository.AuthorityRepository;
 import com.hh.aws.service.RequestService;
 import com.hh.aws.utils.ResponseUtil;
