@@ -13,6 +13,13 @@ public class Authority {
    @NotNull
    private String name;
 
+   public Authority() {
+
+   }
+   public Authority(@NotNull String name) {
+      this.name = name;
+   }
+
    public String getName() {
       return name;
    }

@@ -11,9 +11,9 @@ public class Classes {
     @GeneratedValue
     private long id;
     @Column
-    private String className;
+    private String className;// 班级名称
     @Column
-    private String classNumber;
+    private String classNumber;// 班级编号
 
     public long getId() {
         return id;

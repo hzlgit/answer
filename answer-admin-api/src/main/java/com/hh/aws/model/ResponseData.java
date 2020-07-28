@@ -1,11 +1,12 @@
 package com.hh.aws.model;
 
 import com.hh.aws.model.enums.ResultCode;
+import java.io.Serializable;
 
-public class ResponseData {
+public class ResponseData<T> implements Serializable {
     private String code = "0000";
     private String msg;
-    private Object data;
+    private T data;
     public ResponseData() {
     }
     public ResponseData(ResultCode resultCode) {
@@ -19,7 +20,7 @@ public class ResponseData {
         this.msg = msg;
         this.code = code;
     }
-    public ResponseData(ResultCode resultCode, Object data) {
+    public ResponseData(ResultCode resultCode, T data) {
         this.msg = resultCode.getMsg();
         this.code = resultCode.getCode();
         this.data = data;
@@ -44,7 +45,7 @@ public class ResponseData {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
 }

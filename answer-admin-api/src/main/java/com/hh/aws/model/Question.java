@@ -11,13 +11,13 @@ public class Question {
     @GeneratedValue
     private long id;
     @Column
-    private String qusType;
+    private String qusType;// 题目类型
     @Column
-    private String qusDesc;
+    private String qusDesc;// 题目简介
     @Column
-    private String title;
+    private String title;// 题目
     @Column
-    private int score;
+    private int score;// 分值
     @Column
     private String choiceA;
     @Column
@@ -28,9 +28,8 @@ public class Question {
     private String choiceD;
     @Column
     private String choiceE;
-    // 正确答案
     @Column
-    private String qusAnswer;
+    private String qusAnswer; // 正确答案
 
     public long getId() {
         return id;

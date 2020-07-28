@@ -1,42 +1,43 @@
 package com.hh.aws.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class PageData {
-    private int totalPage;
-    private int size;
-    private int currentPage;
-    private List list;
+public class PageData<T> implements Serializable {
+    private long totalPage;
+    private long size;
+    private long currentPage;
+    private List<T> list;
 
-    public int getTotalPage() {
+    public long getTotalPage() {
         return totalPage;
     }
 
-    public void setTotalPage(int totalPage) {
+    public void setTotalPage(long totalPage) {
         this.totalPage = totalPage;
     }
 
-    public int getSize() {
+    public long getSize() {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(long size) {
         this.size = size;
     }
 
-    public int getCurrentPage() {
+    public long getCurrentPage() {
         return currentPage;
     }
 
-    public void setCurrentPage(int currentPage) {
+    public void setCurrentPage(long currentPage) {
         this.currentPage = currentPage;
     }
 
-    public List getList() {
+    public List<T> getList() {
         return list;
     }
 
-    public void setList(List list) {
+    public void setList(List<T> list) {
         this.list = list;
     }
 }

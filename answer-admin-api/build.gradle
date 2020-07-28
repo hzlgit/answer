@@ -38,6 +38,7 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-web')
     implementation('org.springframework.boot:spring-boot-starter-data-jpa')
     implementation('org.springframework.boot:spring-boot-starter-security')
+    implementation 'com.google.code.gson:gson:2.8.6'
     implementation('com.alibaba:fastjson:1.2.62')
     implementation('org.slf4j:slf4j-api:1.7.26')
     implementation("org.springframework.boot:spring-boot-devtools")

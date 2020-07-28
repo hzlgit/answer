@@ -67,7 +67,6 @@ public class User {
     }
 
     @ManyToMany
-    @Cascade(value = {org.hibernate.annotations.CascadeType.ALL}) // 设置级联关系
     @JoinTable(
             name = "user_authority",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},

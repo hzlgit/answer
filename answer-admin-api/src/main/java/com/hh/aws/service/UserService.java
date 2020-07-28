@@ -1,9 +1,10 @@
 package com.hh.aws.service;
 
+import com.hh.aws.model.PageData;
 import com.hh.aws.model.User;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -11,7 +12,7 @@ public interface UserService {
 
     Optional<User> getUserWithAuthorities();
 
-    Page<User> getUserList(Integer page, Integer size);
+    PageData<User> getUserList(Integer page, Integer size, Map<String, String> param, String sortName, String sortType);
 
      User findUserById(long id);
 
@@ -20,10 +21,4 @@ public interface UserService {
      void edit(User user);
 
      void delete(long id);
-    /**
-     * 查找用户的菜单权限标识集合
-     * @param userName
-     * @return
-     */
-    Set<String> findPermissions(String userName);
 }
