@@ -1,4 +1,4 @@
-package com.hh.aws.model;
+package com.hh.aws.bean;
 
 import com.hh.aws.model.enums.ResultCode;
 import java.io.Serializable;

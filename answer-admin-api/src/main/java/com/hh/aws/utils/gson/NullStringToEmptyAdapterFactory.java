@@ -1,4 +1,4 @@
-package com.hh.aws.utils;
+package com.hh.aws.utils.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
