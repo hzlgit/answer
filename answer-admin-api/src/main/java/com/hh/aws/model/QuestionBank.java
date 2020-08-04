@@ -1,5 +1,6 @@
 package com.hh.aws.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -15,11 +16,24 @@ public class QuestionBank {
     private long id;
 
     // 名称
+    @Column
     private String name;
     // 封面
+    @Column
     private String cover;
     // 难度
+    @Column
     private int level;
+    @Column
+    private String desc; // 简介
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
 
     public long getId() {
         return id;

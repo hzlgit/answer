@@ -30,6 +30,8 @@ public class Question {
     private String choiceE;
     @Column
     private String qusAnswer; // 正确答案
+    @Column
+    private Integer level; // 难度
 
     public long getId() {
         return id;
